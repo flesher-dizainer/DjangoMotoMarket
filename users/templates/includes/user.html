@@ -1,0 +1,24 @@
+<!-- подключаем в базовом шаблоне -->
+{% if user.is_authenticated %}
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="{{ user.get_avatar_url }}" alt="Аватар" class="avatar-img">
+            {{ user.username }}
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            {% if user.user_type == 'admin' %}
+                <li><hr class="dropdown-divider"></li>
+            {% endif %}
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <form method="post" action="{% url 'users:logout' %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="dropdown-item">Выход</button>
+                </form>
+            </li>
+        </ul>
+    </li>
+{% else %}
+    <a class="nav-link" href="{% url 'users:login' %}">Вход</a>
+    <a class="nav-link" href="{% url 'users:register' %}">Регистрация</a>
+{% endif %}
