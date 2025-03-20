@@ -4,6 +4,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 
 
 def user_avatar_path(instance, filename):
@@ -26,13 +27,15 @@ class CustomUser(AbstractUser):
         verbose_name='Тип пользователя'
     )
     email = models.EmailField(unique=True, verbose_name='Email')
-    phone = models.CharField(unique=True, max_length=15, blank=True, verbose_name='Телефон')
+    phone = models.CharField(unique=True, max_length=15, blank=True, null=True, verbose_name='Телефон')
     avatar = models.ImageField(
         upload_to=user_avatar_path,
         blank=True,
         null=True,
         verbose_name='Аватар'
     )
+    bio = models.TextField(blank=True, null=True, verbose_name='О себе')
+    date_of_birth = models.DateField(blank=True, null=True, verbose_name='Дата рождения')
 
     class Meta:
         verbose_name = 'Пользователь'
@@ -43,3 +46,7 @@ class CustomUser(AbstractUser):
         if self.avatar and hasattr(self.avatar, 'url'):
             return self.avatar.url
         return f"{settings.STATIC_URL}img/default_avatar.png"
+
+    def get_absolute_url(self):
+        """Возвращает URL профиля пользователя"""
+        return reverse('users:profile', kwargs={'username': self.username})
