@@ -1,24 +1,56 @@
-<!-- подключаем в базовом шаблоне -->
 {% if user.is_authenticated %}
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="{{ user.get_avatar_url }}" alt="Аватар" class="avatar-img">
+            <img src="{{ user.get_avatar_url }}" alt="Аватар" class="avatar-img rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
             {{ user.username }}
         </a>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <li>
+                <a class="dropdown-item" href="{% url 'users:profile' username=user.username %}">
+                    <i class="fas fa-user me-2"></i>Мой профиль
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="{% url 'users:profile_edit' %}">
+                    <i class="fas fa-edit me-2"></i>Редактировать профиль
+                </a>
+            </li>
             {% if user.user_type == 'admin' %}
                 <li><hr class="dropdown-divider"></li>
+                <li>
+                    <a class="dropdown-item" href="{% url 'admin:index' %}">
+                        <i class="fas fa-cogs me-2"></i>Панель администратора
+                    </a>
+                </li>
+            {% endif %}
+            {% if user.user_type == 'manager' %}
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <a class="dropdown-item" href="#">
+                        <i class="fas fa-tasks me-2"></i>Панель менеджера
+                    </a>
+                </li>
             {% endif %}
             <li><hr class="dropdown-divider"></li>
             <li>
                 <form method="post" action="{% url 'users:logout' %}" class="d-inline">
                     {% csrf_token %}
-                    <button type="submit" class="dropdown-item">Выход</button>
+                    <button type="submit" class="dropdown-item">
+                        <i class="fas fa-sign-out-alt me-2"></i>Выход
+                    </button>
                 </form>
             </li>
         </ul>
     </li>
 {% else %}
-    <a class="nav-link" href="{% url 'users:login' %}">Вход</a>
-    <a class="nav-link" href="{% url 'users:register' %}">Регистрация</a>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'users:login' %}">
+            <i class="fas fa-sign-in-alt me-1"></i>Вход
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'users:register' %}">
+            <i class="fas fa-user-plus me-1"></i>Регистрация
+        </a>
+    </li>
 {% endif %}
