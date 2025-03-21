@@ -50,3 +50,7 @@ class CustomUser(AbstractUser):
     def get_absolute_url(self):
         """Возвращает URL профиля пользователя"""
         return reverse('users:profile', kwargs={'username': self.username})
+
+    def is_admin(self):
+        """Проверяет, является ли пользователь администратором"""
+        return self.user_type == 'admin' or self.is_superuser
