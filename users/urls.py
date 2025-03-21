@@ -1,4 +1,7 @@
+from django.conf.urls.static import static
 from django.urls import path
+
+from DjangoMotoMarket import settings
 from .views import (
     RegisterView, CustomLogoutView, CustomLoginView,
     ProfileView, ProfileEditView,
@@ -15,10 +18,10 @@ urlpatterns = [
     path('logout/', CustomLogoutView.as_view(), name='logout'),
 
     # Профиль пользователя
-    path('profile/<str:username>/', ProfileView.as_view(), name='profile'),
+
     path('profile/edit/', ProfileEditView.as_view(), name='profile_edit'),
     path('profile/<str:username>/edit/', ProfileEditView.as_view(), name='admin_profile_edit'),
-
+    path('profile/<str:username>/', ProfileView.as_view(), name='profile'),
     # Администрирование пользователей
     path('users/', UserListView.as_view(), name='user_list'),
     path('users/<str:username>/change-type/', ChangeUserTypeView.as_view(), name='change_user_type'),
