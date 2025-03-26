@@ -1,0 +1,10 @@
+<div class="nav-item">
+    {% if request.user.is_authenticated %}
+        <a href="{% url 'cart:cart_detail' %}" class="nav-link">
+            <i class="bi bi-cart3"></i>
+            <span class="badge bg-primary rounded-pill" id="cart-counter">
+                {{ cart.total_items }}
+            </span>
+        </a>
+    {% endif %}
+</div>

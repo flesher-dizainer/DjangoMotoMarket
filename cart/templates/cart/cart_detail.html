@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Ваша корзина</h1>
+
+{% if cart_items %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Товар</th>
+            <th>Количество</th>
+            <th>Цена за единицу</th>
+            <th>Общая цена</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in cart_items %}
+        <tr>
+            <td>{{ item.product.model.manufacturer.name }} {{ item.product.model.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.product.price }} руб.</td>
+            <td>{{ item.total_price }} руб.</td>
+            <td>
+                <a href="{% url 'cart:cart_item_update' item.pk %}" class="btn btn-sm btn-primary">Изменить</a>
+                <a href="{% url 'cart:cart_item_delete' item.pk %}" class="btn btn-sm btn-danger">Удалить</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3"><strong>Итого:</strong></td>
+            <td colspan="2"><strong>{{ total_price }} руб.</strong></td>
+        </tr>
+    </tfoot>
+</table>
+{% else %}
+<p>Ваша корзина пуста.</p>
+{% endif %}
+
+<a href="{% url 'products:product_list' %}" class="btn btn-secondary">Продолжить покупки</a>
+{% if cart_items %}
+<a href="#" class="btn btn-success">Оформить заказ</a>
+{% endif %}
+{% endblock %}
