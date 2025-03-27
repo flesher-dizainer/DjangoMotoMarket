@@ -15,6 +15,19 @@
                 </div>
             </div>
         {% endif %}
+
+        <form method="GET">
+            <!-- ... другие поля формы (поиск, производитель, цена) ... -->
+            <div>
+                <label>Категории:</label><br>
+                {% for category in categories %}
+                    <button class="btn btn-outline-primary" type="submit" name="category" value="{{ category.pk }}">{{ category.name }}</button>
+                {% endfor %}
+                <!--  Если нужна кнопка "Сбросить фильтры"  -->
+            <button class="btn btn-outline-primary" type="submit" name="reset" value="true">Все</button>
+            </div>
+        </form>
+
         <div class="row mb-4">
             <div class="col-12">
                 <form class="d-flex" method="get">
