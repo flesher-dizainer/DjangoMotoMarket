@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.views import LogoutView, LoginView, PasswordResetView, PasswordResetDoneView, \
     PasswordResetConfirmView, PasswordResetCompleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView, DetailView, ListView
@@ -42,6 +43,9 @@ class CustomLoginView(LoginView):
 
     def form_valid(self, form):
         messages.success(self.request, 'Вы успешно вошли в систему!')
+        # Проверяем наличие локальной корзины
+        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'success': True, 'has_local_cart': True})
         return super().form_valid(form)
 
     def form_invalid(self, form):

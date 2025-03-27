@@ -54,3 +54,8 @@ class CustomUser(AbstractUser):
     def is_admin(self):
         """Проверяет, является ли пользователь администратором"""
         return self.user_type == 'admin' or self.is_superuser
+
+
+    def is_staff(self):
+        """Проверяет, является ли пользователь менеджером"""
+        return self.user_type == 'manager'

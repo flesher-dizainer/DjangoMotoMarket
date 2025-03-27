@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Производители{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>Производители</h1>
+        </div>
+        <div class="col-md-4 text-end">
+            {% if user.is_staff %}
+            <a href="{% url 'products:manufacturer_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Добавить производителя
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <form method="get" class="d-flex">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Поиск производителей..."
+                           value="{{ request.GET.search|default:'' }}">
+                    <button type="submit" class="btn btn-outline-primary">Поиск</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        {% if manufacturers %}
+            {% for manufacturer in manufacturers %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ manufacturer.name }}</h5>
+                            <p class="card-text">{{ manufacturer.description|truncatewords:20 }}</p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a href="{% url 'products:manufacturer_detail' manufacturer.pk %}" class="btn btn-sm btn-info">
+                                Подробнее
+                            </a>
+                            {% if user.is_staff %}
+                            <a href="{% url 'products:manufacturer_update' manufacturer.pk %}" class="btn btn-sm btn-warning">
+                                Редактировать
+                            </a>
+                            <a href="{% url 'products:manufacturer_delete' manufacturer.pk %}" class="btn btn-sm btn-danger">
+                                Удалить
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    Производители не найдены.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    {% if is_paginated %}
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Первая</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Предыдущая</a>
+                        </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Следующая</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Последняя</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

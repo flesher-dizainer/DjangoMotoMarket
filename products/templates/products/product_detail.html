@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.model.manufacturer.name }} {{ product.model.name }} - {{ product.year }}{% endblock %}
+
+{% block content %}
+    <div class="container my-4">
+        <!-- Хлебные крошки -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'products:product_list' %}">Каталог</a></li>
+                <li class="breadcrumb-item active">{{ product.model.manufacturer.name }} {{ product.model.name }}</li>
+            </ol>
+        </nav>
+
+        <!-- Основная информация о товаре -->
+        <div class="row">
+            <!-- Галерея изображений -->
+            <div class="col-md-6">
+                {% if product.images.all %}
+                    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            {% for image in product.images.all %}
+                                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                    <img src="{{ image.image.url }}" class="d-block w-100"
+                                         alt="{{ product.model.manufacturer.name }} {{ product.model.name }}">
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% if product.images.count > 1 %}
+                            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel"
+                                    data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Назад</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel"
+                                    data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Вперед</span>
+                            </button>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="text-center bg-light py-5">
+                        <img src="{% static 'images/no-image.jpg' %}" class="img-fluid" alt="Нет изображения">
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Информация о товаре -->
+            <div class="col-md-6">
+                <h1 class="product-title">{{ product.model.manufacturer.name }} {{ product.model.name }}
+                    ({{ product.year }})</h1>
+
+                <!-- Рейтинг -->
+                <div class="d-flex align-items-center mb-2">
+                    <div class="rating">
+                        {% for i in rating_range %}
+                            {% if i < product.get_rating %}
+                                <i class="bi bi-star-fill text-warning"></i>
+                            {% else %}
+                                <i class="bi bi-star text-warning"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <span class="ms-2">({{ product.approved_reviews_count }} отзывов)</span>
+                </div>
+
+                <!-- Цена и наличие -->
+                <div class="fs-2 mb-3 text-primary">
+                    <strong>{{ product.price|floatformat:"0" }} ₽</strong>
+                </div>
+
+                <div class="availability mb-3">
+                    {% if product.available_quantity > 0 %}
+                        <span class="badge bg-success">В наличии ({{ product.available_quantity }} шт.)</span>
+                    {% else %}
+                        <span class="badge bg-danger">Нет в наличии</span>
+                    {% endif %}
+                </div>
+
+                <!-- Кнопка добавления в корзину -->
+
+                <form action="{% url 'cart:cart_item_add' product.id %}" method="post"
+                      style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="quantity" value="1">
+                    {% if product.available_quantity > 0 %}
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-cart-plus"></i> В корзину
+                        </button>
+                    {% else %}
+                        <button class="btn btn-secondary" disabled>
+                            <i class="bi bi-cart-plus"></i>Нет в наличии
+                        </button>
+                    {% endif %}
+                </form>
+
+                <!-- Характеристики -->
+                <div class="card mb-3">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Характеристики</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm">
+                            <tbody>
+                            <tr>
+                                <th width="40%">Производитель:</th>
+                                <td>{{ product.model.manufacturer.name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Модель:</th>
+                                <td>{{ product.model.name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Год выпуска:</th>
+                                <td>{{ product.year }}</td>
+                            </tr>
+                            <tr>
+                                <th>Объем двигателя:</th>
+                                <td>{{ product.engine_capacity }} см³</td>
+                            </tr>
+                            <tr>
+                                <th>Цвет:</th>
+                                <td>{{ product.color }}</td>
+                            </tr>
+                            <tr>
+                                <th>Размер колес:</th>
+                                <td>{{ product.front_wheel_size }}/{{ product.rear_wheel_size }}"</td>
+                            </tr>
+                            <tr>
+                                <th>Рейтинг:</th>
+                                <td>
+                                    {% for i in "12345" %}
+                                        {% if i|add:0 <= product.get_rating %}
+                                            <i class="bi bi-star-fill text-warning"></i>
+                                            <!-- Заполненная звезда -->
+                                        {% else %}
+                                            <i class="bi bi-star text-warning"></i>  <!-- Пустая звезда -->
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Описание товара -->
+        {% if product.description %}
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">Описание</h5>
+                        </div>
+                        <div class="card-body">
+                            {{ product.description|linebreaks }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <h2>Отзывы:</h2>
+        {% for review in reviews %}
+            <p><strong>{{ review.author }}:</strong> {{ review.text }} (Рейтинг: {{ review.rating }})</p>
+        {% endfor %}
+
+        <h2>Написать отзыв:</h2>
+        {% load crispy_forms_tags %}
+
+        <form method="post">
+            {% csrf_token %}
+            {{ review_form|crispy }}
+            <button type="submit" class="btn btn-primary">Отправить отзыв</button>
+        </form>
+
+    </div>
+{% endblock %}

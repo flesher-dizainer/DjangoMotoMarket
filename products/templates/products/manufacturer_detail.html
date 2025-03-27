@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ manufacturer.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>{{ manufacturer.name }}</h1>
+        </div>
+        <div class="col-md-4 text-end">
+            {% if user.is_staff %}
+            <a href="{% url 'products:manufacturer_update' manufacturer.pk %}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Редактировать
+            </a>
+            <a href="{% url 'products:manufacturer_delete' manufacturer.pk %}" class="btn btn-danger">
+                <i class="fas fa-trash"></i> Удалить
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Информация о производителе</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Описание:</strong> {{ manufacturer.description|linebreaks }}</p>
+            <p><strong>Дата добавления:</strong> {{ manufacturer.created_at|date:"d.m.Y H:i" }}</p>
+            <p><strong>Последнее обновление:</strong> {{ manufacturer.updated_at|date:"d.m.Y H:i" }}</p>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Модели производителя</h5>
+        </div>
+        <div class="card-body">
+            {% if models %}
+                <div class="list-group">
+                    {% for model in models %}
+                        <div class="list-group-item">
+                            <h5 class="mb-1">{{ model.name }}</h5>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted">У этого производителя пока нет моделей.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Товары производителя</h5>
+        </div>
+        <div class="card-body">
+            {% if products %}
+                <div class="row">
+                    {% for product in products %}
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                {% if product.images.first %}
+                                    <img src="{{ product.images.first.image.url }}" class="card-img-top" alt="{{ product }}">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ product }}</h5>
+                                    <p class="card-text">
+                                        <strong>Цена:</strong> {{ product.price }} руб.<br>
+                                        <strong>Год:</strong> {{ product.year }}<br>
+                                        <strong>Объем двигателя:</strong> {{ product.engine_capacity }} см³
+                                    </p>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{% url 'products:product_detail' product.pk %}" class="btn btn-primary btn-sm">Подробнее</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted">У этого производителя пока нет товаров.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'products:manufacturer_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Назад к списку производителей
+        </a>
+    </div>
+</div>
+{% endblock %}

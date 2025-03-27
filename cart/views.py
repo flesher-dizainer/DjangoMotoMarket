@@ -1,5 +1,5 @@
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Cart, CartItem
@@ -29,22 +29,25 @@ class CartItemCreateView(LoginRequiredMixin, CreateView):
     template_name = 'cart/cartitem_form.html'
 
     def get_success_url(self):
-        return reverse_lazy('cart:cart_detail')
+        return reverse('cart:cart_detail') + '#' + str(self.kwargs['product_id']) # добавили якорь
 
     def form_valid(self, form):
         cart = Cart.get_cart(self.request.user)
         product = get_object_or_404(Product, pk=self.kwargs['product_id'])
-
-        # Проверяем, есть ли уже такой товар в корзине
+        requested_quantity = form.cleaned_data['quantity']
+        if product.quantity < requested_quantity:
+            raise ValueError(f"На складе всего {product.model.name} = {product.quantity} шт")
+            # Проверяем, есть ли уже такой товар в корзине
         cart_item, created = CartItem.objects.get_or_create(
             cart=cart,
             product=product,
-            defaults={'quantity': form.cleaned_data['quantity']}
+            defaults={'quantity': requested_quantity}
         )
 
         if not created:
-            cart_item.quantity += form.cleaned_data['quantity']
-            cart_item.save()
+            if product.quantity >= (requested_quantity + cart_item.quantity):
+                cart_item.quantity += requested_quantity
+                cart_item.save()
 
         return redirect(self.get_success_url())
 

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}
+    {% if form.instance.pk %}Редактирование категории{% else %}Добавление новой категории{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h1 class="mb-4">
+        {% if form.instance.pk %}Редактирование категории{% else %}Добавление новой категории{% endif %}
+    </h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">
+            {% if form.instance.pk %}Сохранить изменения{% else %}Создать категорию{% endif %}
+        </button>
+        <a href="{% url 'products:product_list' %}" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
+{% endblock %}

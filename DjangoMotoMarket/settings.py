@@ -29,7 +29,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,6 +43,8 @@ INSTALLED_APPS = [
     'cart',
     'widget_tweaks',
     'core',
+    'crispy_forms',
+    'crispy_bootstrap5',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -69,6 +73,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'cart.context_processors.cart',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -126,7 +131,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'DjangoMotoMarket/../core/static')
 
 # Добавьте эти строки в settings.py
 MEDIA_URL = '/media/'

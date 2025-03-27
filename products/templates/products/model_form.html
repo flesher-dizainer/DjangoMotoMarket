@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {% if form.instance.pk %}Редактирование {{ head_text }}{% else %}Добавление {{ head_text }}{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h2 class="mb-4">
+        {% if form.instance.pk %}Редактирование {{ head_text }}{% else %}Добавление {{ head_text }}{% endif %}
+    </h2>
+
+    <div class="row">
+        <div class="col-md-8">
+            <form method="post" class="mb-4">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        {% if form.instance.pk %}Сохранить{% else %}Создать{% endif %}
+                    </button>
+                    <a href="{% url 'products:product_list' %}" class="btn btn-outline-secondary">Отмена</a>
+                {% if model  %}
+                    <a href="{% url 'products:manufacturer_create' %}" class="btn btn-success">
+                        <i class="bi bi-plus-circle"></i> Добавить производителя
+                    </a>
+                {% endif %}
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Существующие модели</h5>
+                </div>
+                <div class="card-body">
+                    {% if models %}
+                        <ul class="list-group list-group-flush">
+                            {% for model in models %}
+                            <li class="list-group-item">
+                                <strong>{{ model.manufacturer.name }}</strong>
+                                {{ model.name }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="alert alert-info mb-0">Нет доступных моделей</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

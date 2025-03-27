@@ -1,8 +1,36 @@
 {% extends 'base.html' %}
 
-{% block title %}Home - MotoStore{% endblock %}
+{% block title %}Главная{% endblock %}
+
+{% block nav_items %}
+
+{% endblock %}
 
 {% block content %}
-<h1>Welcome to MotoStore!</h1>
-<p>Your one-stop shop for motorcycles and accessories.</p>
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center mb-4">Добро пожаловать в MotoMarket</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Каталог мотоциклов</h5>
+                    <p class="card-text">Широкий выбор мотоциклов различных марок и моделей.</p>
+                    <a href="{% url 'products:product_list' %}" class="btn btn-primary">Перейти в каталог</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Специальные предложения</h5>
+                    <p class="card-text">Акции и скидки на популярные модели.</p>
+                    <a href="#" class="btn btn-primary">Смотреть акции</a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

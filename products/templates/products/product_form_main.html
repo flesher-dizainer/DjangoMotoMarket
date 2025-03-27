@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {% if form.instance.pk %}Редактирование мотоцикла{% else %}Добавление мотоцикла{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h1 class="mb-4">{% if form.instance.pk %}Редактирование мотоцикла{% else %}Добавление мотоцикла{% endif %}</h1>
+
+    <div class="card">
+        <div class="card-body">
+            {% crispy form %}
+        </div>
+    </div>
+
+    {% if form.instance.pk and form.instance.images.all %}
+    <div class="card mt-4">
+        <div class="card-header">
+            <h4>Текущие изображения</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for image in form.instance.images.all %}
+                <div class="col-md-3 mb-3">
+                    <div class="card">
+                        <img src="{{ image.image.url }}" class="card-img-top" alt="Изображение мотоцикла">
+                        <div class="card-body text-center">
+                            <a href="#" class="btn btn-sm btn-danger">Удалить</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

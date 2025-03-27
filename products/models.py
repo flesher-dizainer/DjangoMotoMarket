@@ -52,8 +52,14 @@ class Model(models.Model):
 
 
 class Product(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
-    model = models.ForeignKey(Model, on_delete=models.CASCADE, related_name='products')
+    category = models.ForeignKey(
+        Category,
+        verbose_name='Категория',
+        on_delete=models.CASCADE,
+        related_name='products'
+
+        )
+    model = models.ForeignKey(Model, verbose_name='Модель', on_delete=models.CASCADE, related_name='products')
     year = models.PositiveIntegerField(
         verbose_name='Год выпуска',
         validators=[MinValueValidator(1900), MaxValueValidator(datetime.now().year)]
@@ -64,11 +70,12 @@ class Product(models.Model):
         help_text='см³'
     )
     price = models.DecimalField(
+        verbose_name='Цена',
         max_digits=10,
         decimal_places=2,
         validators=[MinValueValidator(0), MaxValueValidator(10_000_000)]
     )
-    color = models.CharField(max_length=50)
+    color = models.CharField(max_length=50, verbose_name='Цвет')
     front_wheel_size = models.PositiveIntegerField(
         verbose_name='Переднее колесо',
         default=21,
@@ -84,7 +91,7 @@ class Product(models.Model):
         unique=True,
         verbose_name='Номер рамы'
     )
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, verbose_name='Описание')
     quantity = models.PositiveIntegerField(default=0, verbose_name='На складе')
     reserved = models.PositiveIntegerField(default=0, verbose_name='Резерв')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -122,11 +129,10 @@ class ProductImage(models.Model):
 
 class ProductReview(models.Model):
     RATING_CHOICES = [(i, str(i)) for i in range(6)]
-
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
-    author = models.CharField(max_length=100)
-    text = models.TextField()
-    rating = models.IntegerField(choices=RATING_CHOICES)
+    author = models.CharField(max_length=100, verbose_name='Автор')
+    text = models.TextField(help_text='Введите отзыв', verbose_name='Отзыв')
+    rating = models.IntegerField(choices=RATING_CHOICES, help_text='Выберите рейтинг')
     is_approved = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
