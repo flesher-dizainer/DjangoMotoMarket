@@ -149,7 +149,3 @@ class ManufacturerCreateView(CreateView):
         return super().form_valid(form)
 
 
-class ProductReviewCreateView(CreateView):
-    model = ProductReview
-    fields = ['rating', 'comment']
-    template_name = 'products/product_review_form.html'
