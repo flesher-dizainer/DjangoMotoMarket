@@ -21,7 +21,7 @@ urlpatterns = [
 
     # Маршруты для категорий
     path('category/create/', CategoryCreateView.as_view(), name='category_create'),
-    path('category/<int:pk>/', ProductListView.as_view(), name='category_products'),  # Новый маршрут
+
 
     # Маршруты для моделей и производителей
     path('model/create/', ModelCreateView.as_view(), name='model_create'),
