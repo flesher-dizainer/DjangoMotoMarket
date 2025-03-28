@@ -17,15 +17,36 @@ Including another URLconf
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from rest_framework import routers
 from DjangoMotoMarket import settings
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+from api.views import CustomUserViewSet, CategoryViewSet, ManufacturerViewSet, ModelViewSet, ProductViewSet, \
+    ProductReviewViewSet, ProductImageViewSet, StockMovementViewSet
 
+router = routers.DefaultRouter()
+router.register(r'users', CustomUserViewSet)
+router.register(r'categories', CategoryViewSet, basename='category')
+router.register(r'manufacturers', ManufacturerViewSet, basename='manufacturer')
+router.register(r'models', ModelViewSet, basename='model')
+router.register(r'products', ProductViewSet, basename='product')
+router.register(r'reviews', ProductReviewViewSet, basename='review')
+router.register(r'images', ProductImageViewSet, basename='image')
+router.register(r'stock-movements', StockMovementViewSet, basename='stockmovement')
 urlpatterns = [
     path('', include('core.urls', namespace='core')),
     path('admin/', admin.site.urls),
     path('users/', include('users.urls', namespace='users')),
     path('products/', include('products.urls', namespace='products')),
     path('cart/', include('cart.urls', namespace='cart')),
+    path('api/', include(router.urls)),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -46,6 +46,10 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'django_q',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'api',
+    'drf_spectacular',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -65,7 +69,20 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'DjangoMotoMarket.urls'
-
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+# Настройки для drf-spectacular
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Django Moto Market API',
+    'DESCRIPTION': 'API documentation for Django Moto Market',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # Другие настройки по желанию
+}
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -85,7 +102,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'DjangoMotoMarket.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -116,7 +132,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -127,7 +142,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/

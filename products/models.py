@@ -16,7 +16,7 @@ class Category(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse('category_detail', kwargs={'pk': self.pk})
 
 
@@ -31,7 +31,7 @@ class Manufacturer(models.Model):
         verbose_name = 'Производитель'
         verbose_name_plural = 'Производители'
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse('manufacturer_detail', kwargs={'pk': self.pk})
 
 
@@ -47,7 +47,7 @@ class Model(models.Model):
         verbose_name = 'Модель'
         verbose_name_plural = 'Модели'
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse('model_detail', kwargs={'pk': self.pk})
 
 
@@ -58,7 +58,7 @@ class Product(models.Model):
         on_delete=models.CASCADE,
         related_name='products'
 
-        )
+    )
     model = models.ForeignKey(Model, verbose_name='Модель', on_delete=models.CASCADE, related_name='products')
     year = models.PositiveIntegerField(
         verbose_name='Год выпуска',
@@ -110,13 +110,13 @@ class Product(models.Model):
         verbose_name_plural = 'Товары'
 
     @property
-    def available_quantity(self):
+    def available_quantity(self) -> int:
         return self.quantity - self.reserved
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse('products:product_detail', kwargs={'pk': self.pk})
 
-    def get_rating(self):
+    def get_rating(self) -> float:
         rating = self.reviews.filter(is_approved=True).aggregate(Avg('rating'))
         return round(rating['rating__avg'], 1) if rating['rating__avg'] else 0
 
