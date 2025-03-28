@@ -106,6 +106,8 @@ class Product(models.Model):
             models.Index(fields=['price']),
             models.Index(fields=['category', 'price']),
         ]
+        verbose_name = 'Товар'
+        verbose_name_plural = 'Товары'
 
     @property
     def available_quantity(self):
@@ -120,11 +122,15 @@ class Product(models.Model):
 
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images', verbose_name='Товар')
     image = models.ImageField(upload_to='products/%Y/%m/')
 
     def __str__(self):
         return f"Изображение {self.product}"
+
+    class Meta:
+        verbose_name = 'Изображение'
+        verbose_name_plural = 'Изображения'
 
 
 class ProductReview(models.Model):
@@ -141,3 +147,5 @@ class ProductReview(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'

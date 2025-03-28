@@ -45,8 +45,7 @@ class ProductListView(ListView):
         # Фильтрация по производителю (если выбран)
         if manufacturer_id:
             queryset = queryset.filter(model__manufacturer__pk=manufacturer_id)
-
-        # 🔥 Фильтрация по диапазону цен (если указаны min или max)
+        # Фильтрация по цене (если указаны минимальная и максимальная цена)
         if price_min:
             queryset = queryset.filter(price__gte=float(price_min))  # price >= price_min
         if price_max:

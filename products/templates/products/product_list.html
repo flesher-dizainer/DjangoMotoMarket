@@ -21,10 +21,11 @@
             <div>
                 <label>Категории:</label><br>
                 {% for category in categories %}
-                    <button class="btn btn-outline-primary" type="submit" name="category" value="{{ category.pk }}">{{ category.name }}</button>
+                    <button class="btn btn-outline-primary" type="submit" name="category"
+                            value="{{ category.pk }}">{{ category.name }}</button>
                 {% endfor %}
                 <!--  Если нужна кнопка "Сбросить фильтры"  -->
-            <button class="btn btn-outline-primary" type="submit" name="reset" value="true">Все</button>
+                <button class="btn btn-outline-primary" type="submit" name="reset" value="true">Все</button>
             </div>
         </form>
 
@@ -46,7 +47,7 @@
                         <h5 class="mb-0">Фильтры</h5>
                     </div>
                     <div class="card-body">
-                        {% csrf_token %}
+
                         <form method="get">
                             <div class="mb-3">
                                 <label class="form-label">Производитель</label>
