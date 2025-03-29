@@ -26,7 +26,11 @@ from rest_framework_simplejwt.views import (
 )
 from api.views import CustomUserViewSet, CategoryViewSet, ManufacturerViewSet, ModelViewSet, ProductViewSet, \
     ProductReviewViewSet, ProductImageViewSet, StockMovementViewSet
-
+from analytics.views import (
+    AnalyticsReportViewSet,
+    ProductViewViewSet,
+    AnalyticsDashboardView
+)
 router = routers.DefaultRouter()
 router.register(r'users', CustomUserViewSet)
 router.register(r'categories', CategoryViewSet, basename='category')
@@ -36,6 +40,9 @@ router.register(r'products', ProductViewSet, basename='product')
 router.register(r'reviews', ProductReviewViewSet, basename='review')
 router.register(r'images', ProductImageViewSet, basename='image')
 router.register(r'stock-movements', StockMovementViewSet, basename='stockmovement')
+router.register(r'analytics-reports', AnalyticsReportViewSet, basename='analytics-report')
+router.register(r'product-views', ProductViewViewSet, basename='product-view')
+router.register(r'analytics-dashboard', AnalyticsDashboardView, basename='analytics-dashboard')
 urlpatterns = [
     path('', include('core.urls', namespace='core')),
     path('admin/', admin.site.urls),
